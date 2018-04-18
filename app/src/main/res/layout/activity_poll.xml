@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#00BCD4"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/enter_poll_name"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Enter poll name"
+                android:textSize="26sp"
+                android:textColor="#000000"/>
+            <EditText
+                android:id="@+id/enter_poll_desc"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:hint="Enter poll description"
+                android:textSize="25sp"
+                android:textColor="#000000"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:background="#80DEEA"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="#0097A7"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/poll_image_view"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/poll"
+                        android:contentDescription="pollImage" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text=" Poll"
+                        android:textSize="30sp"/>
+                </LinearLayout>
+                <EditText
+                    android:id="@+id/enter_poll_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Enter poll question?"
+                    android:textSize="25dp"/>
+                <EditText
+                    android:id="@+id/poll_option_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Poll option 1"
+                    android:textSize="20sp"/>
+                <EditText
+                    android:id="@+id/poll_option_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Poll option 2"
+                    android:textSize="20sp"/>
+                <EditText
+                    android:id="@+id/poll_option_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Poll option 3"
+                    android:textSize="20sp"/>
+                <EditText
+                    android:id="@+id/poll_option_four"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Poll option 4"
+                    android:textSize="20sp"/>
+
+            </LinearLayout>
+            <Button
+                android:id="@+id/post_poll_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:onClick="toMainActivity"
+                android:gravity="center"
+                android:layout_marginTop="120dp"
+                android:background="#0097A7"
+                android:text="Post poll"
+                android:textSize="25sp"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</android.support.v7.widget.LinearLayoutCompat>
