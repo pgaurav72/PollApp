@@ -28,17 +28,18 @@
                 android:hint="Enter poll description"
                 android:textSize="25sp"
                 android:textColor="#000000"/>
+        </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="390dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="#fff"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:background="#81D4FA"
                     android:orientation="horizontal">
                     <ImageView
@@ -55,6 +56,10 @@
                         android:textColor="#fff"
                         android:textSize="30sp"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="340dp"
+                    android:orientation="vertical">
                 <EditText
                     android:id="@+id/enter_poll_question"
                     android:layout_width="match_parent"
@@ -86,22 +91,21 @@
                     android:hint="Poll option 4"
                     android:textSize="20sp"/>
 
+                <Button
+                    android:layout_gravity="clip_vertical"
+                    android:id="@+id/post_poll_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:textColor="#fff"
+                    android:onClick="toMainActivity"
+                    android:gravity="center"
+                    android:background="#81D4FA"
+                    android:text="Post poll"
+                    android:textSize="25sp"/>
+                </LinearLayout>
             </LinearLayout>
-            <Button
-                android:id="@+id/post_poll_button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:textColor="#fff"
-                android:onClick="toMainActivity"
-                android:gravity="center"
-                android:layout_marginTop="100dp"
-                android:background="#81D4FA"
-                android:text="Post poll"
-                android:textSize="25sp"/>
+
         </LinearLayout>
-
-
-    </LinearLayout>
 
 
 

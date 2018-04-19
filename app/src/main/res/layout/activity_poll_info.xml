@@ -70,42 +70,86 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/poll_info_op1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:textColor="#2196F3"
-                android:text="Option one"
-                android:clickable="true"
-                android:onClick="optionOneClicked"
-                android:textSize="20sp"/>
-            <TextView
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/poll_info_op1"
+                    android:layout_width="250dp"
+                    android:layout_height="50dp"
+                    android:textColor="#2196F3"
+                    android:text="Option one"
+                    android:clickable="true"
+                    android:onClick="optionOneClicked"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/option_one_votes"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="0"
+                    android:textSize="25sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
                 android:id="@+id/poll_info_op2"
-                android:layout_width="match_parent"
+                    android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:textColor="#2196F3"
                 android:clickable="true"
                 android:onClick="optionTwoClicked"
                 android:text="Option two"
                 android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/option_two_votes"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="0"
+                    android:textSize="25sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <TextView
                 android:id="@+id/poll_info_op3"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:textColor="#2196F3"
                 android:clickable="true"
                 android:onClick="optionThreeClicked"
                 android:text="Option three"
                 android:textSize="20dp"/>
+                <TextView
+                    android:id="@+id/option_three_votes"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="0"
+                    android:textSize="25sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <TextView
                 android:id="@+id/poll_info_op4"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="50dp"
                 android:textColor="#2196F3"
                 android:clickable="true"
                 android:onClick="optionFourClicked"
                 android:text="Option four"
                 android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/option_four_votes"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="0"
+                    android:textSize="25sp"/>
+            </LinearLayout>
         </LinearLayout>
         <View
             android:layout_width="fill_parent"
