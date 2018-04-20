@@ -95,13 +95,13 @@ public class PollActivity extends AppCompatActivity {
     final String option3 = optionThree.getText().toString().trim();
     final String option4 = optionFour.getText().toString().trim();
 
-    if (TextUtils.isEmpty(name) && TextUtils.isEmpty(desc) && TextUtils.isEmpty(question) && TextUtils.isEmpty(option1) && TextUtils.isEmpty(option2) && TextUtils.isEmpty(option3) && TextUtils.isEmpty(option4)){
+    if (TextUtils.isEmpty(name)  && TextUtils.isEmpty(question) && TextUtils.isEmpty(option1) && TextUtils.isEmpty(option2) && TextUtils.isEmpty(option3) && TextUtils.isEmpty(option4)){
       new AlertDialog.Builder(PollActivity.this)
               .setTitle("Enter all fields!")
               .setNeutralButton("Ok", null)
               .show();
     }
-    else if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(desc) && !TextUtils.isEmpty(question) && !TextUtils.isEmpty(option1) && !TextUtils.isEmpty(option2) && !TextUtils.isEmpty(option3) && !TextUtils.isEmpty(option4)
+    else if (!TextUtils.isEmpty(name)  && !TextUtils.isEmpty(question) && !TextUtils.isEmpty(option1) && !TextUtils.isEmpty(option2) && !TextUtils.isEmpty(option3) && !TextUtils.isEmpty(option4)
 ){
       pollReference = FirebaseDatabase.getInstance().getReference().child("users_polls");
       privateVoteRef = FirebaseDatabase.getInstance().getReference().child("private_votes").push();

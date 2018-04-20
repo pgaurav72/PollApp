@@ -44,6 +44,11 @@ public class PollInfoActivity extends AppCompatActivity {
   //private DatabaseReference voteGiven;
   private DatabaseReference countRef;
   private DatabaseReference numberOFVotes;
+  private DatabaseReference countOFVotes;
+  private DatabaseReference oneVoteRef;
+  private DatabaseReference twoVoteRef;
+  private DatabaseReference threeVoteRef;
+  private  DatabaseReference fourVoteRef;
   private String post_key;
   private String uid;
   private int voteOne = 0 ;
@@ -97,6 +102,8 @@ public class PollInfoActivity extends AppCompatActivity {
         option_Four.setText(optionFour);
 
         checkIfClicked();
+        individualVotesCount();
+
 
       }
 
@@ -106,7 +113,11 @@ public class PollInfoActivity extends AppCompatActivity {
       }
     });
 
+    countOFVotes = FirebaseDatabase.getInstance().getReference().child("individual_votes_count");
+
   }
+
+
 
 
 
@@ -125,6 +136,18 @@ public class PollInfoActivity extends AppCompatActivity {
 
       clicked  = 1;
      int one = 1;
+     final DatabaseReference option = countOFVotes.child(pollName).child("option_one").push();
+     keyRef.addValueEventListener(new ValueEventListener() {
+       @Override
+       public void onDataChange(DataSnapshot dataSnapshot) {
+         option.setValue("For "+pollName+" first option is selected.");
+       }
+
+       @Override
+       public void onCancelled(DatabaseError databaseError) {
+
+       }
+     });
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
     if (clicked ==1){
       clickedOnText(one);
@@ -136,9 +159,20 @@ public class PollInfoActivity extends AppCompatActivity {
   //------------------------------------------- Option two clicked --------------------------------------------------
 
   public void optionTwoClicked(View view){
-    voteTwo++;
-    final int countTwo = voteTwo;
-    option_two_votes.setText(String.valueOf(countTwo));
+    //----To check how many times option two is selected for current poll----------
+    final DatabaseReference option = countOFVotes.child(pollName).child("option_two").push();
+    keyRef.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        option.setValue("For "+pollName+" second option is selected.");
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+   //-------------------------------------------------------------------------------
     clicked  = 1;
     int two = 2;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
@@ -151,9 +185,20 @@ public class PollInfoActivity extends AppCompatActivity {
   //----------------------------------------- Option three  clicked -------------------------------------------------
 
   public void optionThreeClicked(View view){
-    voteThree++;
-    final int countThree = voteThree;
-    option_three_votes.setText(String.valueOf(countThree));
+    //------------------------
+    final DatabaseReference option = countOFVotes.child(pollName).child("option_three").push();
+    keyRef.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        option.setValue("For "+pollName+" third option is selected.");
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+    //-----------------------------------------------------------------------------
     clicked  = 1;
     int three = 3;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
@@ -168,11 +213,20 @@ public class PollInfoActivity extends AppCompatActivity {
 
   public void optionFourClicked(View view){
 
-    voteFour++;
-    final int countFour = voteFour;
-   option_four_votes.setText(String.valueOf(countFour));
-    countRef = FirebaseDatabase.getInstance().getReference().child("count_of_votes").child(pollName);
-    countRef.child("option_four").setValue(String.valueOf(voteFour));
+   //------------------------------
+    final DatabaseReference option = countOFVotes.child(pollName).child("option_four").push();
+    keyRef.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        option.setValue("For "+pollName+" fourth option is selected.");
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+    //-----------------------------------------------------------------------------------
     clicked  = 1;
     int four = 4;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
@@ -195,6 +249,7 @@ public class PollInfoActivity extends AppCompatActivity {
         sendData.child("voted").setValue(number);
         sendData.child("given_to_poll").setValue(pollName);
         sendData.child("vote_given").setValue(vote_given);
+
 
       }
 
@@ -241,6 +296,7 @@ public class PollInfoActivity extends AppCompatActivity {
 
       }
     });
+    // ------------------------------------------- TO get total votes count --------------------------------------------------------
     countRef = FirebaseDatabase.getInstance().getReference().child("users_votes").child(pollName);
     countRef.addValueEventListener(new ValueEventListener() {
       @Override
@@ -255,8 +311,75 @@ public class PollInfoActivity extends AppCompatActivity {
 
       }
     });
+// -----------------------------------------------------------------------------------------------------------------------------------
+  }
+
+  //------------------------------------------- To get individual votes for options ---------------------------------------------------
+  public void individualVotesCount(){
+
+    oneVoteRef = FirebaseDatabase.getInstance().getReference().child("individual_votes_count").child(pollName);
+    final DatabaseReference forOne = oneVoteRef.child("option_one");
+    twoVoteRef = FirebaseDatabase.getInstance().getReference().child("individual_votes_count").child(pollName);
+    final DatabaseReference forTwo = twoVoteRef.child("option_two");
+    threeVoteRef = FirebaseDatabase.getInstance().getReference().child("individual_votes_count").child(pollName);
+    final DatabaseReference forThree = threeVoteRef.child("option_three");
+    fourVoteRef = FirebaseDatabase.getInstance().getReference().child("individual_votes_count").child(pollName);
+    final DatabaseReference forFour = fourVoteRef.child("option_four");
+
+    forOne.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        int one = (int) dataSnapshot.getChildrenCount();
+        option_one_votes.setText(String.valueOf(one));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+
+    forTwo.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        int two = (int) dataSnapshot.getChildrenCount();
+        option_two_votes.setText(String.valueOf(two));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+
+    forThree.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        int three = (int) dataSnapshot.getChildrenCount();
+        option_three_votes.setText(String.valueOf(three));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
+
+    forFour.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+        int four = (int) dataSnapshot.getChildrenCount();
+        option_four_votes.setText(String.valueOf(four));
+      }
+
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+
+      }
+    });
 
   }
+  //--------------------------------------------------------------------------------------------------------------------------------
 
 
   }

@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseRecyclerAdapter filenameRecyclerAdapter =
             new FirebaseRecyclerAdapter<PollData, pollViewHolder> (options) {
+              @NonNull
+              @Override
+              public PollData getItem(int position) {
+                return super.getItem(getItemCount() - position - 1);
+              }
+
               @Override
               protected void onBindViewHolder(pollViewHolder holder, int position, PollData model) {
                 holder.setUser_image(getApplicationContext(), model.getUser_image());
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.setPoll_name(model.getPoll_name());
                 holder.setPoll_question(model.getPoll_question());
 
-                final String post_key = getRef(position).getKey();
+                final String post_key = getRef(getItemCount() - position - 1).getKey();
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
@@ -104,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
       pollList.setAdapter(filenameRecyclerAdapter);
       filenameRecyclerAdapter.notifyDataSetChanged();
     }catch (Exception e){
-      Toast.makeText(this, "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
+      e.printStackTrace();
     }
   }
 public static class  pollViewHolder extends RecyclerView.ViewHolder {
