@@ -158,14 +158,14 @@
             android:layout_height="2dp"
             android:background="#78909C"/>
         <TextView
-            android:id="@+id/votes_text_view"
+            android:id="@+id/total_votes_text_view"
             android:layout_marginStart="15dp"
             android:layout_width="match_parent"
             android:layout_marginTop="3dp"
             android:layout_height="50dp"
             android:textColor="#1565C0"
             android:textSize="20sp"
-            android:text="Votes: "/>
+            android:text="Total votes: "/>
         <View
             android:layout_width="fill_parent"
             android:layout_marginStart="15dp"

@@ -31,6 +31,7 @@ public class PollInfoActivity extends AppCompatActivity {
   private TextView option_Two;
   private TextView option_Three;
   private TextView option_Four;
+  private TextView totalVotesTextView;
   private TextView option_one_votes;
   private TextView option_two_votes;
   private TextView option_three_votes;
@@ -42,12 +43,13 @@ public class PollInfoActivity extends AppCompatActivity {
   //private DatabaseReference totalVotes;
   //private DatabaseReference voteGiven;
   private DatabaseReference countRef;
+  private DatabaseReference numberOFVotes;
   private String post_key;
   private String uid;
-  private int voteOne = 0;
-  private int voteTwo = 0;
-  private int voteThree = 0;
-  private int voteFour = 0;
+  private int voteOne = 0 ;
+  private int voteTwo ;
+  private int voteThree ;
+  private int voteFour ;
   private int clicked;
   private int totalVotesCount;
   private int row;
@@ -70,11 +72,10 @@ public class PollInfoActivity extends AppCompatActivity {
     option_two_votes = findViewById(R.id.option_two_votes);
     option_three_votes = findViewById(R.id.option_three_votes);
     option_four_votes = findViewById(R.id.option_four_votes);
-
+    totalVotesTextView = findViewById(R.id.total_votes_text_view);
     mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     uid = Objects.requireNonNull(currentUser).getUid();
-
     post_key = getIntent().getStringExtra("post_key");
 
     pollInfoRef = FirebaseDatabase.getInstance().getReference().child("users_polls");
@@ -119,14 +120,10 @@ public class PollInfoActivity extends AppCompatActivity {
     voteGiven(row);
   }
 
-
-
+//---------------------------------------- Option one clicked ----------------------------------------------------------------
   public void  optionOneClicked(View view){
-    voteOne ++;
-    final int countOne = voteOne;
-    countRef = FirebaseDatabase.getInstance().getReference().child("count_of_votes").child(pollName);
-    countRef.child("option_one").setValue(String.valueOf(voteOne));
-     clicked  = 1;
+
+      clicked  = 1;
      int one = 1;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
     if (clicked ==1){
@@ -135,13 +132,13 @@ public class PollInfoActivity extends AppCompatActivity {
 
   }
 
-
+//------------------------------------------------------------------------------------------------------------------
+  //------------------------------------------- Option two clicked --------------------------------------------------
 
   public void optionTwoClicked(View view){
     voteTwo++;
     final int countTwo = voteTwo;
-    countRef = FirebaseDatabase.getInstance().getReference().child("count_of_votes").child(pollName);
-    countRef.child("option_two").setValue(String.valueOf(voteTwo));
+    option_two_votes.setText(String.valueOf(countTwo));
     clicked  = 1;
     int two = 2;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
@@ -149,11 +146,14 @@ public class PollInfoActivity extends AppCompatActivity {
       clickedOnText(two);
     }
   }
+
+  //----------------------------------------------------------------------------------------------------------------
+  //----------------------------------------- Option three  clicked -------------------------------------------------
+
   public void optionThreeClicked(View view){
     voteThree++;
     final int countThree = voteThree;
-    countRef = FirebaseDatabase.getInstance().getReference().child("count_of_votes").child(pollName);
-    countRef.child("option_three").setValue(String.valueOf(voteThree));
+    option_three_votes.setText(String.valueOf(countThree));
     clicked  = 1;
     int three = 3;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
@@ -161,10 +161,16 @@ public class PollInfoActivity extends AppCompatActivity {
       clickedOnText(three);
     }
   }
+
+
+  //---------------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------- option four clicked ----------------------------------------------
+
   public void optionFourClicked(View view){
 
     voteFour++;
     final int countFour = voteFour;
+   option_four_votes.setText(String.valueOf(countFour));
     countRef = FirebaseDatabase.getInstance().getReference().child("count_of_votes").child(pollName);
     countRef.child("option_four").setValue(String.valueOf(voteFour));
     clicked  = 1;
@@ -176,6 +182,7 @@ public class PollInfoActivity extends AppCompatActivity {
 
   }
 
+//-----------------------------------------------------------------------------------------------------------------------
 //----------------------------- To send data when voted -----------------------------------------------------
   public void  voteGiven(int whichClicked){
     final int number = whichClicked;
@@ -234,22 +241,13 @@ public class PollInfoActivity extends AppCompatActivity {
 
       }
     });
-    countRef = FirebaseDatabase.getInstance().getReference().child("count_of_votes").child(pollName);
+    countRef = FirebaseDatabase.getInstance().getReference().child("users_votes").child(pollName);
     countRef.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
-        try {
-          String firstOption = (String) dataSnapshot.child("option_one").getValue();
-          option_one_votes.setText(firstOption);
-          String secondOption = (String) dataSnapshot.child("option_two").getValue();
-          option_two_votes.setText(secondOption);
-          String thirdOption = (String) dataSnapshot.child("option_three").getValue();
-          option_three_votes.setText(thirdOption);
-          String fourthOption = (String) dataSnapshot.child("option_four").getValue();
-          option_four_votes.setText(fourthOption);
-        }catch (Exception e){
-          e.printStackTrace();
-        }
+        int totalVotes = ((int) dataSnapshot.getChildrenCount());
+        String votes = String.valueOf(totalVotes);
+        totalVotesTextView.setText("Total votes: "+votes);
       }
 
       @Override

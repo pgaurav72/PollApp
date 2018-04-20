@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
    RecyclerView pollList;
   private Query query;
   private String uid;
-  private FirebaseAuth  mAuth;
+  private FirebaseAuth mAuth;
 
 
   @Override
@@ -147,6 +149,46 @@ public static class  pollViewHolder extends RecyclerView.ViewHolder {
   }
 
 }
+
+
+  //------------------------------------- For menu ------------------------------------------------------
+
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu,menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+    int id =  menuItem.getItemId();
+    if ( id == R.id.sign_out_of_main_activity){
+      FirebaseAuth.getInstance().signOut();
+      Intent toLogInActivity = new Intent(getApplicationContext(),LogInActivity.class);
+      startActivity(toLogInActivity);
+
+    }
+
+    return super.onOptionsItemSelected(menuItem);
+  }
+
+
+
+ /* @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    int id = item.getItemId();
+    if (id == R.id.sign_out){
+      FirebaseAuth.getInstance().signOut();
+      Intent toLogIn = new Intent(getApplicationContext(),LogInActivity.class);
+      startActivity(toLogIn);
+    }
+
+    return super.onOptionsItemSelected(item);
+  } */
+//--------------------------------------------------------------------------------------------------------------------
 
 
   //-------------------------------------------Exit on back start-------------------------------------
