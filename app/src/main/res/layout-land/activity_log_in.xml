@@ -8,79 +8,72 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="450sp"
-            android:layout_marginEnd="20sp"
-            android:layout_marginStart="20sp"
-            android:layout_marginTop="40sp"
+            android:layout_height="450dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="70dp"
             android:orientation="vertical">
-
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:gravity="center"
+                android:layout_height="50dp"
                 android:text="UsersPoll"
-                android:textColor="#fff"
+                android:gravity="center"
                 android:textSize="30sp"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"
+                android:textColor="#fff"/>
             <EditText
                 android:id="@+id/log_email"
                 android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_marginTop="20sp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
                 android:hint="Enter email"
                 android:inputType="textEmailAddress"
+                android:textSize="25sp"
                 android:textColor="#000000"
-                android:textSize="25sp" />
-
+                />
             <EditText
                 android:id="@+id/log_pass"
                 android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_marginTop="10sp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:hint="Enter password"
                 android:inputType="textPassword"
-                android:textColor="#000000"
-                android:textSize="25sp" />
-
+                android:textSize="25sp"
+                android:textColor="#000000"/>
             <Button
                 android:id="@+id/log_in_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="50sp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="20sp"
-                android:layout_marginStart="20sp"
-                android:layout_marginTop="50sp"
-                android:background="#0097A7"
                 android:onClick="logInFunction"
+                android:layout_marginTop="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:text="Log in"
                 android:textColor="#fff"
-                android:textSize="22sp" />
-
+                android:background="#0097A7"
+                android:textSize="22sp"/>
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_marginTop="30sp"
-                android:gravity="center"
+                android:layout_height="50dp"
                 android:text="Not an user, Sign up below!"
-                android:textColor="#fff"
-                android:textSize="20sp" />
-
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="#fff"/>
             <Button
                 android:id="@+id/sign_btn"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_marginEnd="20sp"
-                android:layout_marginStart="20sp"
-                android:layout_marginTop="30sp"
-                android:background="#0097A7"
                 android:onClick="toSignUpActivity"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:text="Sign in"
                 android:textColor="#fff"
-                android:textSize="22sp" />
+                android:background="#0097A7"
+                android:textSize="22sp"/>
 
         </LinearLayout>
     </LinearLayout>

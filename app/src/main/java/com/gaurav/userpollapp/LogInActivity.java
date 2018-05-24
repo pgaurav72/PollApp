@@ -1,24 +1,18 @@
 package com.gaurav.userpollapp;
 
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Handler;
+
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,6 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
+import io.fabric.sdk.android.Fabric;
+
 /**
  * @author Gaurav
  */
@@ -40,6 +38,7 @@ public class LogInActivity extends AppCompatActivity  {
   private EditText logPassEditText;
   private FirebaseAuth mAuth;
   private DatabaseReference mDatabase;
+  String logEmail;
 
 
   public void toSignUpActivity(View view){
@@ -49,7 +48,7 @@ public class LogInActivity extends AppCompatActivity  {
   }
 
   public void logInFunction(View view){
-    String logEmail = logEmailEditText.getText().toString().trim();
+    logEmail = logEmailEditText.getText().toString().trim();
     String logPass = logPassEditText.getText().toString().trim();
     if (TextUtils.isEmpty(logEmail) && TextUtils.isEmpty(logPass) || TextUtils.isEmpty(logEmail) || TextUtils.isEmpty(logPass)){
       new AlertDialog.Builder(LogInActivity.this)
@@ -77,7 +76,7 @@ public class LogInActivity extends AppCompatActivity  {
   }
 
   public void checkUserExists(){
-    final String userId = mAuth.getCurrentUser().getUid();
+    final String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
     mDatabase.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,7 +97,11 @@ public class LogInActivity extends AppCompatActivity  {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+    // TODO: Move this to where you establish a user session
+    logUser();
     setContentView(R.layout.activity_log_in);
+
 
 
 
@@ -118,6 +121,14 @@ public class LogInActivity extends AppCompatActivity  {
       String text = emailFromSignUp.getString("email");
       logEmailEditText.setText(text);
     }
+  }
+
+  private void logUser() {
+    // TODO: Use the current user's information
+    // You can call any combination of these three methods
+///    Crashlytics.setUserIdentifier(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+    Crashlytics.setUserEmail(logEmail);
+   // Crashlytics.setUserName("Test User");
   }
 
   //----------------------------------------Authentication------------------------------------------

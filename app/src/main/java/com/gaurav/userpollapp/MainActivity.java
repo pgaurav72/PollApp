@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Fabric.with(this, new Crashlytics());
     setContentView(R.layout.activity_main);
 
     mAuth = FirebaseAuth.getInstance();
@@ -176,24 +179,9 @@ public static class  pollViewHolder extends RecyclerView.ViewHolder {
       startActivity(toLogInActivity);
 
     }
-
     return super.onOptionsItemSelected(menuItem);
   }
 
-
-
- /* @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-
-    int id = item.getItemId();
-    if (id == R.id.sign_out){
-      FirebaseAuth.getInstance().signOut();
-      Intent toLogIn = new Intent(getApplicationContext(),LogInActivity.class);
-      startActivity(toLogIn);
-    }
-
-    return super.onOptionsItemSelected(item);
-  } */
 //--------------------------------------------------------------------------------------------------------------------
 
 

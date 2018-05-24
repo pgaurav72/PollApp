@@ -23,6 +23,10 @@
         </activity>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".PollInfoActivity"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="06d965e8ed08ae08f2c0fe3d455a952632cf1b80"
+            />
     </application>
 
 </manifest>

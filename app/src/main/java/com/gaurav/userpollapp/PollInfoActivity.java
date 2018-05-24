@@ -2,9 +2,12 @@ package com.gaurav.userpollapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -27,7 +30,7 @@ public class PollInfoActivity extends AppCompatActivity {
 
   private TextView pollInfoName;
   private TextView pollInfoQuestion;
-  private  TextView option_One;
+  private TextView option_One;
   private TextView option_Two;
   private TextView option_Three;
   private TextView option_Four;
@@ -40,26 +43,34 @@ public class PollInfoActivity extends AppCompatActivity {
   private DatabaseReference pollInfoRef;
   private DatabaseReference votedRef;
   private DatabaseReference keyRef;
+  private DatabaseReference databaseRef;
   //private DatabaseReference totalVotes;
   //private DatabaseReference voteGiven;
   private DatabaseReference countRef;
   private DatabaseReference numberOFVotes;
-  private DatabaseReference countOFVotes;
-  private DatabaseReference oneVoteRef;
-  private DatabaseReference twoVoteRef;
-  private DatabaseReference threeVoteRef;
-  private  DatabaseReference fourVoteRef;
+   private DatabaseReference countOFVotes;
+   private DatabaseReference oneVoteRef;
+   private DatabaseReference twoVoteRef;
+   private DatabaseReference threeVoteRef;
+   private DatabaseReference fourVoteRef;
+   private DatabaseReference totalVotes;
+
   private String post_key;
   private String uid;
-  private int voteOne = 0 ;
-  private int voteTwo ;
-  private int voteThree ;
-  private int voteFour ;
+  private static int voteOne = 0;
+  private static int voteTwo = 0;
+  private static int voteThree = 0;
+  private static int voteFour = 0;
+
   private int clicked;
   private int totalVotesCount;
   private int row;
   private String pollName;
   private String vote_given = "given";
+
+  public void forceCrash(View view) {
+    throw new RuntimeException("This is a crash");
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,9 @@ public class PollInfoActivity extends AppCompatActivity {
     setContentView(R.layout.activity_poll_info);
 
     mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    uid = Objects.requireNonNull(currentUser).getUid();
+
     pollInfoName = findViewById(R.id.poll_info_name);
     pollInfoQuestion = findViewById(R.id.poll_info_question);
     option_One = findViewById(R.id.poll_info_op1);
@@ -78,21 +92,48 @@ public class PollInfoActivity extends AppCompatActivity {
     option_three_votes = findViewById(R.id.option_three_votes);
     option_four_votes = findViewById(R.id.option_four_votes);
     totalVotesTextView = findViewById(R.id.total_votes_text_view);
-    mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
-    uid = Objects.requireNonNull(currentUser).getUid();
+
+
     post_key = getIntent().getStringExtra("post_key");
 
     pollInfoRef = FirebaseDatabase.getInstance().getReference().child("users_polls");
     pollInfoRef.child(post_key).addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
+
         pollName = (String) dataSnapshot.child("poll_name").getValue();
         String pollQuestion = (String) dataSnapshot.child("poll_question").getValue();
         String optionOne = (String) dataSnapshot.child("option_one").getValue();
         String optionTwo = (String) dataSnapshot.child("option_two").getValue();
         String optionThree = (String) dataSnapshot.child("option_three").getValue();
         String optionFour = (String) dataSnapshot.child("option_four").getValue();
+
+        // ----------------------------------- To check if vote given or not in shared preferences ----------------------------------------
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        String userID = pref.getString("user_id",null);
+        String voteGive = pref.getString("vote_given","not_given");
+        String pollname = pref.getString("poll_name","not_clicked");
+
+        assert userID != null;
+        try {
+          if (userID.equals(uid) && voteGive.equals("given") && pollname.equals(pollName)) {
+            option_One.setClickable(false);
+            option_Two.setClickable(false);
+            option_Three.setClickable(false);
+            option_Four.setClickable(false);
+          }else if (userID.equals(uid) && voteGive.equals("not_given") && pollname.equals("not_clicked")){
+            option_One.setClickable(true);
+            option_Two.setClickable(true);
+            option_Three.setClickable(true);
+            option_Four.setClickable(true);
+          }
+        }catch (Exception e){
+          e.printStackTrace();
+        }
+
+
+
+        //--------------------------------------------------------------------------------------------------------------------------
 
         pollInfoName.setText(pollName);
         pollInfoQuestion.setText(pollQuestion);
@@ -103,25 +144,25 @@ public class PollInfoActivity extends AppCompatActivity {
 
         checkIfClicked();
         individualVotesCount();
-
+        databaseRef = FirebaseDatabase.getInstance().getReference().child("Option_votes").child(pollName);
 
       }
 
       @Override
       public void onCancelled(DatabaseError databaseError) {
-        Toast.makeText(PollInfoActivity.this, "Error: ", Toast.LENGTH_SHORT).show();
+
       }
     });
 
     countOFVotes = FirebaseDatabase.getInstance().getReference().child("individual_votes_count");
+
 
   }
 
 
 
 
-
-  public void clickedOnText (int value){
+  public void clickedOnText(int value) {
 
     int row = value;
     option_One.setClickable(false);
@@ -131,12 +172,25 @@ public class PollInfoActivity extends AppCompatActivity {
     voteGiven(row);
   }
 
-//---------------------------------------- Option one clicked ----------------------------------------------------------------
-  public void  optionOneClicked(View view){
+  public void storeData(){
+    SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+    SharedPreferences.Editor editor = pref.edit();
+    editor.putString("user_id", uid);
+    editor.putString("vote_given","given");
+    editor.putString("poll_name",pollName);
+    editor.apply();
 
-      clicked  = 1;
-     int one = 1;
-     final DatabaseReference option = countOFVotes.child(pollName).child("option_one").push();
+  }
+
+
+  //---------------------------------------- Option one clicked ----------------------------------------------------------------
+  public void optionOneClicked(View view) {
+
+//----------------------------------------
+   storeData();
+    clicked = 1;
+    int one = 1;
+    final DatabaseReference option = countOFVotes.child(pollName).child("option_one").push();
      keyRef.addValueEventListener(new ValueEventListener() {
        @Override
        public void onDataChange(DataSnapshot dataSnapshot) {
@@ -148,8 +202,9 @@ public class PollInfoActivity extends AppCompatActivity {
 
        }
      });
+
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
-    if (clicked ==1){
+    if (clicked == 1) {
       clickedOnText(one);
     }
 
@@ -158,9 +213,11 @@ public class PollInfoActivity extends AppCompatActivity {
 //------------------------------------------------------------------------------------------------------------------
   //------------------------------------------- Option two clicked --------------------------------------------------
 
-  public void optionTwoClicked(View view){
+  public void optionTwoClicked(View view) {
+
+    storeData();
     //----To check how many times option two is selected for current poll----------
-    final DatabaseReference option = countOFVotes.child(pollName).child("option_two").push();
+   final DatabaseReference option = countOFVotes.child(pollName).child("option_two").push();
     keyRef.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,11 +229,11 @@ public class PollInfoActivity extends AppCompatActivity {
 
       }
     });
-   //-------------------------------------------------------------------------------
-    clicked  = 1;
+    //-------------------------------------------------------------------------------
+    clicked = 1;
     int two = 2;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
-    if (clicked == 1){
+    if (clicked == 1) {
       clickedOnText(two);
     }
   }
@@ -184,7 +241,9 @@ public class PollInfoActivity extends AppCompatActivity {
   //----------------------------------------------------------------------------------------------------------------
   //----------------------------------------- Option three  clicked -------------------------------------------------
 
-  public void optionThreeClicked(View view){
+  public void optionThreeClicked(View view) {
+
+    storeData();
     //------------------------
     final DatabaseReference option = countOFVotes.child(pollName).child("option_three").push();
     keyRef.addValueEventListener(new ValueEventListener() {
@@ -199,10 +258,10 @@ public class PollInfoActivity extends AppCompatActivity {
       }
     });
     //-----------------------------------------------------------------------------
-    clicked  = 1;
+    clicked = 1;
     int three = 3;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
-    if (clicked == 1){
+    if (clicked == 1) {
       clickedOnText(three);
     }
   }
@@ -211,10 +270,11 @@ public class PollInfoActivity extends AppCompatActivity {
   //---------------------------------------------------------------------------------------------------------------------------
   //--------------------------------------------------- option four clicked ----------------------------------------------
 
-  public void optionFourClicked(View view){
+  public void optionFourClicked(View view) {
 
-   //------------------------------
-    final DatabaseReference option = countOFVotes.child(pollName).child("option_four").push();
+    storeData();
+    //------------------------------
+     final DatabaseReference option = countOFVotes.child(pollName).child("option_four").push();
     keyRef.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
@@ -227,18 +287,18 @@ public class PollInfoActivity extends AppCompatActivity {
       }
     });
     //-----------------------------------------------------------------------------------
-    clicked  = 1;
+    clicked = 1;
     int four = 4;
     Toast.makeText(this, "Vote given!", Toast.LENGTH_SHORT).show();
-    if (clicked == 1){
+    if (clicked == 1) {
       clickedOnText(four);
     }
 
   }
 
-//-----------------------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
 //----------------------------- To send data when voted -----------------------------------------------------
-  public void  voteGiven(int whichClicked){
+  public void voteGiven(int whichClicked) {
     final int number = whichClicked;
     votedRef = FirebaseDatabase.getInstance().getReference().child("users_votes");
     final DatabaseReference sendData = votedRef.child(pollName).child(uid).push();
@@ -249,8 +309,6 @@ public class PollInfoActivity extends AppCompatActivity {
         sendData.child("voted").setValue(number);
         sendData.child("given_to_poll").setValue(pollName);
         sendData.child("vote_given").setValue(vote_given);
-
-
       }
 
       @Override
@@ -259,9 +317,10 @@ public class PollInfoActivity extends AppCompatActivity {
       }
     });
   }
-//------------------------------------------------------------------------------------------------------------
+
+  //------------------------------------------------------------------------------------------------------------
   //----------------------------------- To check if the option is clicked once only ---------------------------
-  public void checkIfClicked(){
+  public void checkIfClicked() {
     mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     uid = Objects.requireNonNull(currentUser).getUid();
@@ -269,9 +328,17 @@ public class PollInfoActivity extends AppCompatActivity {
     keyRef.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
-        for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+          //----------------------------------------- To remove last child added -------------------------------------------------------------
+          int numberOfChilds = (int) dataSnapshot.getChildrenCount();
+          if (numberOfChilds == 2){
+           DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users_votes").child(pollName).child(uid).limitToLast(1).getRef();
+           reference.removeValue();
+          }
+
+          //-----------------------------------------------------------------------------------------------------------------------------------
           String yes = (String) snapshot.child("vote_given").getValue();
-          try{
+          try {
             assert yes != null;
             if ("given".equals(yes)) {
               option_One.setClickable(false);
@@ -284,7 +351,7 @@ public class PollInfoActivity extends AppCompatActivity {
               option_Three.setClickable(true);
               option_Four.setClickable(true);
             }
-          }catch (Exception e){
+          } catch (Exception e) {
             e.printStackTrace();
           }
         }
@@ -297,6 +364,7 @@ public class PollInfoActivity extends AppCompatActivity {
       }
     });
     // ------------------------------------------- TO get total votes count --------------------------------------------------------
+
     countRef = FirebaseDatabase.getInstance().getReference().child("users_votes").child(pollName);
     countRef.addValueEventListener(new ValueEventListener() {
       @Override
@@ -311,11 +379,25 @@ public class PollInfoActivity extends AppCompatActivity {
 
       }
     });
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------
   }
 
   //------------------------------------------- To get individual votes for options ---------------------------------------------------
-  public void individualVotesCount(){
+  public void individualVotesCount() {
+
+    SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+    final SharedPreferences.Editor editor = pref.edit();
+
+    String firstOption=pref.getString("option_one_votes",String.valueOf(0));
+    option_one_votes.setText(firstOption);
+    String secondOption=pref.getString("option_two_votes",String.valueOf(0));
+    option_one_votes.setText(secondOption);
+    String thirdOption=pref.getString("option_three_votes",String.valueOf(0));
+    option_one_votes.setText(thirdOption);
+    String fourthOption=pref.getString("option_four_votes",String.valueOf(0));
+    option_one_votes.setText(fourthOption);
 
     oneVoteRef = FirebaseDatabase.getInstance().getReference().child("individual_votes_count").child(pollName);
     final DatabaseReference forOne = oneVoteRef.child("option_one");
@@ -326,11 +408,15 @@ public class PollInfoActivity extends AppCompatActivity {
     fourVoteRef = FirebaseDatabase.getInstance().getReference().child("individual_votes_count").child(pollName);
     final DatabaseReference forFour = fourVoteRef.child("option_four");
 
+
+
     forOne.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
         int one = (int) dataSnapshot.getChildrenCount();
         option_one_votes.setText(String.valueOf(one));
+        editor.putString("option_one_votes", String.valueOf(one));
+        editor.apply();
       }
 
       @Override
@@ -344,6 +430,8 @@ public class PollInfoActivity extends AppCompatActivity {
       public void onDataChange(DataSnapshot dataSnapshot) {
         int two = (int) dataSnapshot.getChildrenCount();
         option_two_votes.setText(String.valueOf(two));
+        editor.putString("option_two_votes", String.valueOf(two));
+        editor.apply();
       }
 
       @Override
@@ -357,6 +445,8 @@ public class PollInfoActivity extends AppCompatActivity {
       public void onDataChange(DataSnapshot dataSnapshot) {
         int three = (int) dataSnapshot.getChildrenCount();
         option_three_votes.setText(String.valueOf(three));
+        editor.putString("option_three_votes", String.valueOf(three));
+        editor.apply();
       }
 
       @Override
@@ -370,6 +460,8 @@ public class PollInfoActivity extends AppCompatActivity {
       public void onDataChange(DataSnapshot dataSnapshot) {
         int four = (int) dataSnapshot.getChildrenCount();
         option_four_votes.setText(String.valueOf(four));
+        editor.putString("option_four_votes", String.valueOf(four));
+        editor.apply();
       }
 
       @Override
@@ -379,8 +471,33 @@ public class PollInfoActivity extends AppCompatActivity {
     });
 
   }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu tohome) {
+    getMenuInflater().inflate(R.menu.tohome,tohome);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+    int id =  menuItem.getItemId();
+    if ( id == R.id.back_to_home){
+      Intent toLogInActivity = new Intent(getApplicationContext(),MainActivity.class);
+      startActivity(toLogInActivity);
+
+    }
+    return super.onOptionsItemSelected(menuItem);
+  }
+
+
+
+
+}
+
+
   //--------------------------------------------------------------------------------------------------------------------------------
 
 
-  }
+
 

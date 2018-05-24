@@ -112,7 +112,11 @@ public class PollActivity extends AppCompatActivity {
          @Override
          public void onDataChange(DataSnapshot dataSnapshot) {
            newPost.child("poll_name").setValue(name);
-           newPost.child("poll_desc").setValue(desc);
+           if(desc == null){
+           newPost.child("poll_desc").setValue(null);
+           }else{
+             newPost.child("poll_desc").setValue(desc);
+           }
            newPost.child("poll_question").setValue(question);
            newPost.child("option_one").setValue(option1);
            newPost.child("option_two").setValue(option2);

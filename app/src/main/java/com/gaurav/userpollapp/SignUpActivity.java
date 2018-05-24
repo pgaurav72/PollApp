@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,22 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_sign_up);
 
-    userNameEditText = findViewById(R.id.sign_up_name);
-    emailEditText = findViewById(R.id.sign_up_email);
-    passEditText = findViewById(R.id.sign_up_pass);
-    profilePicImageView = findViewById(R.id.profile_pic);
-
-    mAuth = FirebaseAuth.getInstance();
-    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-    storageReference = FirebaseStorage.getInstance().getReference();
-
-
-  }
 
   public void selectProfilePicFunction(View view) {
     Intent profilePicIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -116,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
             filepath.putFile(profileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
               @Override
               public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                final Uri downloadUri = taskSnapshot.getDownloadUrl();
+                final Uri downloadUri = taskSnapshot.getUploadSessionUri();
                 currentUserDatabase.child("profile_image").setValue(Objects.requireNonNull(downloadUri).toString());
               }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -161,6 +147,24 @@ public class SignUpActivity extends AppCompatActivity {
       });
     }
 
+  }
+
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+
+    setContentView(R.layout.activity_sign_up);
+
+    userNameEditText = findViewById(R.id.sign_up_name);
+    emailEditText = findViewById(R.id.sign_up_email);
+    passEditText = findViewById(R.id.sign_up_pass);
+    profilePicImageView = findViewById(R.id.profile_pic);
+
+    mAuth = FirebaseAuth.getInstance();
+    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+    storageReference = FirebaseStorage.getInstance().getReference();
   }
 
   //---------------------------------------- On back press exit -------------------------------------------------

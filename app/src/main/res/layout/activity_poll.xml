@@ -14,13 +14,14 @@
             android:layout_marginEnd="5dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <EditText
                 android:id="@+id/enter_poll_name"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:hint="Enter poll name"
-                android:textSize="26sp"
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:textSize="26sp" />
             <EditText
                 android:id="@+id/enter_poll_desc"
                 android:layout_width="match_parent"
